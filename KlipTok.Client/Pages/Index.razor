@@ -10,7 +10,10 @@ Let's look at some clips
 @if (!Clips.Any()) {
 	<p>Loading...</p>
 } else {
+	
 	var first = true;
+
+	<main>
 	@foreach (var clip in Clips)
 	{
 		<Clip ClipData="@clip" Autoplay="@first"></Clip>
@@ -18,6 +21,8 @@ Let's look at some clips
 		first = false;
 
 	}
+	</main>
+	
 }
 
 

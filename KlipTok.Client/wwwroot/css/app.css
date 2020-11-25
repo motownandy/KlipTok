@@ -184,19 +184,29 @@ app {
 
 	.clipBlock {
 		display: block;
-		margin: 10px;
-		width: 100%;
-		clear: both;
-		position: relative;
 	}
 
 	.clipBlock .player {
 		float:left;
 		margin-bottom: 10px;
 	}
-	.clipBlock dl {
-		display: inline-block;
-		float: right;
+
+	main {
+		display: flex;
+		flex-direction: column;
+		flex-wrap: nowrap;
+		justify-content: flex-start;
+		align-items: center;
+		align-content: flex-start;
 	}
 
+	main > * {
+		margin: 20px;
+	}
+
+	.twitchChannelName {
+		font-weight: bold;
+		font-size: larger;
+		margin-right: 1em;
+	}
 }
