@@ -1,6 +1,7 @@
 ﻿@inject NavigationManager nav
 <iframe src="https://clips.twitch.tv/embed?clip=@(ClipId)&parent=@(new Uri(nav.Uri).Host)&autoplay=@(Autoplay.ToString().ToLowerInvariant())"
-				width="100%"
+				width="@PlayerWidth"
+				height="@PlayerHeight"
 				frameborder="0"
 				scrolling="no"
 				allowfullscreen="true"
@@ -8,13 +9,19 @@
 </iframe>
 @code {
 
-/*
-				height="405"
-				width="720"
-*/
+	/*
+					height="405"
+					width="720"
+	*/
 
 	[Parameter] public string ClipId { get; set; }
 
 	[Parameter] public bool Autoplay { get; set; } = false;
+
+	[CascadingParameter(Name = "Width")] public int Width { get; set; }
+
+	protected string PlayerWidth {  get { return Width > 900 ? "720" : "100%"; } }
+
+	protected string PlayerHeight { get { return Width > 900 ? "405" : ""; } }
 
 }

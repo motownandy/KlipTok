@@ -1,11 +1,12 @@
 ﻿@page "/"
 @inject HttpClient Http
+@inject IJSRuntime js
 
 Let's look at some clips
 
 <br />
 
-@if (!Clips.Any()) {
+@if (!Clips.Any() || width == 0) {
 	<p>Loading...</p>
 } else {
 	
@@ -14,7 +15,10 @@ Let's look at some clips
 	<main>
 	@foreach (var clip in Clips)
 	{
-		<Clip ClipData="@clip" Autoplay="@first"></Clip>
+
+		<CascadingValue Name="Width" Value="@width">
+			<Clip ClipData="@clip" Autoplay="@first"></Clip>
+		</CascadingValue>
 
 		first = false;
 
@@ -26,10 +30,14 @@ Let's look at some clips
 
 @code {
 
-		IEnumerable<Models.Clip> Clips = new Models.Clip[] { };
+	IEnumerable<Models.Clip> Clips = new Models.Clip[] { };
+
+	int width = 0;
 
 	protected override async Task OnInitializedAsync()
 	{
+
+		width = await js.InvokeAsync<int>("window.Page.getWidth");
 
 		Clips = await Http.GetFromJsonAsync<IEnumerable<Models.Clip>>("/api/GetClips");
 
