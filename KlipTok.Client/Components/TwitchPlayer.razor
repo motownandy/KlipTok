@@ -1,13 +1,17 @@
 ﻿@inject NavigationManager nav
 <iframe src="https://clips.twitch.tv/embed?clip=@(ClipId)&parent=@(new Uri(nav.Uri).Host)&autoplay=@(Autoplay.ToString().ToLowerInvariant())"
-				height="405"
-				width="720"
+				width="100%"
 				frameborder="0"
 				scrolling="no"
 				allowfullscreen="true"
 				class="player">
 </iframe>
 @code {
+
+/*
+				height="405"
+				width="720"
+*/
 
 	[Parameter] public string ClipId { get; set; }
 
