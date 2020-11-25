@@ -1,0 +1,15 @@
+﻿<iframe src="https://clips.twitch.tv/embed?clip=@(ClipId)&parent=localhost&autoplay=@(Autoplay.ToString().ToLowerInvariant())"
+				height="405"
+				width="720"
+				frameborder="0"
+				scrolling="no"
+				allowfullscreen="true"
+				class="player">
+</iframe>
+@code {
+
+	[Parameter] public string ClipId { get; set; }
+
+	[Parameter] public bool Autoplay { get; set; } = false;
+
+}

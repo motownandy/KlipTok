@@ -1,0 +1,37 @@
+﻿@page "/"
+@inject HttpClient Http
+
+<h1>KlipTok</h1>
+
+Let's look at some clips
+
+<br />
+
+@if (!Clips.Any()) {
+	<p>Loading...</p>
+} else {
+	var first = true;
+	@foreach (var clip in Clips)
+	{
+		<Clip ClipData="@clip" Autoplay="@first"></Clip>
+
+		first = false;
+
+	}
+}
+
+
+@code {
+
+		IEnumerable<Models.Clip> Clips = new Models.Clip[] { };
+
+	protected override async Task OnInitializedAsync()
+	{
+
+		Clips = await Http.GetFromJsonAsync<IEnumerable<Models.Clip>>("/api/GetClips");
+
+		await base.OnInitializedAsync();
+
+	}
+
+}

@@ -1,0 +1,23 @@
+﻿<div class="clipBlock">
+
+	<div><b>@ClipData.ChannelName</b> @ClipData.Title</div>
+
+	<div>
+		<TwitchPlayer ClipId="@ClipData.TwitchId" Autoplay="@Autoplay" />
+	</div>
+
+	<div>
+		<b>Up Votes:</b> @ClipData.UpVotes
+		<b>Down Votes: </b> @ClipData.DownVotes
+		<b>Follows:</b> @ClipData.Followers
+	</div>
+
+</div>
+
+@code {
+
+	[Parameter] public Models.Clip ClipData { get; set; }
+
+	[Parameter] public bool Autoplay { get; set; } = false;
+
+}
