@@ -22,26 +22,23 @@ namespace KlipTok.Api
 				new Clip() {
 					TwitchId="SeductiveEvilDinosaurTheRinger",
 					ChannelName="PhareEwings",
-					Followers=11300,
+					Views=11300,
 					Title="OMG It lights Up!",
-					UpVotes=10,
-					DownVotes=2
+					Likes=10
 				},
 				new Clip() {
 					TwitchId="PoisedVastLettuceHeyGirl",
 					ChannelName="PhareEwings",
-					Followers=11300,
+					Views=11300,
 					Title="If You're Happy and You Know It...",
-					UpVotes=10,
-					DownVotes=2
+					Likes=10
 				},
 				new Clip() {
 					TwitchId="TangibleStrongNostrilKreygasm",
 					ChannelName="PhareEwings",
-					Followers=11300,
+					Views=11300,
 					Title="Staff broke her <3",
-					UpVotes=10,
-					DownVotes=2
+					Likes=10
 				},
 			});
 

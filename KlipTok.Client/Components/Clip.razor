@@ -8,10 +8,9 @@
 	</div>
 
 	<div class="clipStatusBar">
-		<span><i class="fas fa-chevron-circle-up" title="Up Votes" aria-label="Up Votes"></i> @ClipData.UpVotes</span>
-		<span><i class="fas fa-chevron-circle-down" title="Down Votes" aria-label="Down Votes"></i> @ClipData.DownVotes</span>
-		<span><i class="far fa-comment-dots" title="Comments"></i> COUNT</span>
-		<span><i class="fab fa-twitch" title=""></i> @ClipData.Followers.ToShortString()</span>
+		<span title="Likes" aria-label="Likes"><i class="fas fa-heart"></i> @ClipData.Likes</span>
+		<span title="Comments"><i class="far fa-comment-dots"></i> COUNT</span>
+		<span title="Clip Views"><i class="fab fa-twitch"></i> @ClipData.Views.ToShortString()</span>
 	</div>
 
 </section>
