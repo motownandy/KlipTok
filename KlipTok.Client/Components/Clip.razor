@@ -3,14 +3,15 @@
 	<div><a class="twitchChannelName" href="https://twitch.tv/@ClipData.ChannelName" target="_blank">@ClipData.ChannelName</a> @ClipData.Title</div>
 
 	<div>
-		@* <TwitchPlayer ClipId="@ClipData.TwitchId" Autoplay="@Autoplay" /> *@
-		<div class="player" style="height:405px;width:720px;display:block;background-color:#333;color:#FFF;">Video Slug</div>
+		 <TwitchPlayer ClipId="@ClipData.TwitchId" Autoplay="@Autoplay" /> 
+		@*<div class="player" style="height:405px;width:720px;display:block;background-color:#333;color:#FFF;">Video Slug</div>*@
 	</div>
 
-	<div>
-		<b>Up Votes:</b> @ClipData.UpVotes
-		<b>Down Votes: </b> @ClipData.DownVotes
-		<b>Follows:</b> @ClipData.Followers.ToShortString()
+	<div class="clipStatusBar">
+		<span><i class="fas fa-chevron-circle-up" title="Up Votes" aria-label="Up Votes"></i> @ClipData.UpVotes</span>
+		<span><i class="fas fa-chevron-circle-down" title="Down Votes" aria-label="Down Votes"></i> @ClipData.DownVotes</span>
+		<span><i class="far fa-comment-dots" title="Comments"></i> COUNT</span>
+		<span><i class="fab fa-twitch" title=""></i> @ClipData.Followers.ToShortString()</span>
 	</div>
 
 </section>
