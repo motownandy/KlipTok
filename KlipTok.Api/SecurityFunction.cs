@@ -28,6 +28,13 @@ namespace KlipTok.Api {
       var code = request.Query["code"];
       var uri = request.Query["redirect_uri"];
 
+      return new OkObjectResult(new {
+        Code = code,
+        Uri = uri,
+        ClientId = TwitchClientId,
+        Secret = TwitchSecret
+      });
+
       var targetUrl = $"https://id.twitch.tv/oauth2/token" +
           $"?client_id={TwitchClientId}" +
           $"&client_secret={TwitchSecret}" +
