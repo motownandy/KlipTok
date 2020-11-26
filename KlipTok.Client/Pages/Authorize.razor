@@ -14,6 +14,8 @@
 
 @if (User != null) {
 <dl>
+  <dt>User Access Token LENGTH</dt>
+  <dd>@User.AccessToken.Length</dd>
   <dt>Id:</dt>
   <dd>@User.TwitchId</dd>
   <dt>Display Name:</dt>
@@ -25,56 +27,64 @@
 
 @code {
 
-  protected string AccessToken;
+	protected string AccessToken;
 
-  protected string UserData;
+	protected string UserData;
 
-  protected override async Task OnInitializedAsync()
-  {
+	protected override async Task OnInitializedAsync()
+	{
 
-    await GetTokens();
+		await GetTokens();
 
-    await GetUserInfo();
+		await GetUserInfo();
 
-    await base.OnInitializedAsync();
+		await base.OnInitializedAsync();
 
-  }
+	}
 
-  public async Task GetTokens() {
+	public async Task GetTokens() {
 
 		var thisUri = new Uri(Nav.Uri);
 		var port = thisUri.IsDefaultPort ? "" : (":" + thisUri.Port);
 		var redirect = new Uri (new Uri(thisUri.Scheme + "://" + thisUri.Host + port), "/authorize");
 
-    var code = QueryHelpers.ParseQuery(thisUri.Query).GetValueOrDefault("code");
-    if (string.IsNullOrEmpty(code)) return;
+		var code = QueryHelpers.ParseQuery(thisUri.Query).GetValueOrDefault("code");
+		if (string.IsNullOrEmpty(code)) return;
 
-    var results = await Http.GetFromJsonAsync<TwitchToken>($"api/auth?code={code}&redirect_uri={redirect}");
+		//		var results = await Http.GetFromJsonAsync<TwitchToken>($"api/auth?code={code}&redirect_uri={redirect}");
+		var response = await Http.GetAsync($"api/auth?twitchcode={code}&redirect_uri={redirect}");
+		if (!response.IsSuccessStatusCode)
+		{
+			Console.WriteLine(await response.Content.ReadAsStringAsync());
+			return;
+		}
 
-    User.AccessToken = results.access_token;
-    User.RefreshToken = results.refresh_token;
-    User.ExpiresIn = results.expires_in;
+		var results = await response.Content.ReadFromJsonAsync<TwitchToken>();
 
-  }
+		User.AccessToken = results.access_token;
+		User.RefreshToken = results.refresh_token;
+		User.ExpiresIn = results.expires_in;
 
-  public async Task GetUserInfo()
-  {
+	}
 
-    if (User.AccessToken == string.Empty) return;
+	public async Task GetUserInfo()
+	{
 
-//    Http.DefaultRequestHeaders.Add("Accept", "application/vnd.twitchtv.v5+json");
-    Http.DefaultRequestHeaders.Add("Authorization", $"Bearer {User.AccessToken}");
-    Http.DefaultRequestHeaders.Add("Client-ID", Configuration["twitch.clientid"]);
-    var response = await Http.GetFromJsonAsync<TwitchUserProfiles>("https://api.twitch.tv/helix/users");
-    var thisProfile = response.data.First();
+		if (string.IsNullOrEmpty(User.AccessToken)) return;
 
-    User.PictureUri = new Uri(thisProfile.profile_image_url);
-    User.TwitchId = thisProfile.id;
-    User.DisplayName = thisProfile.display_name;
+		//    Http.DefaultRequestHeaders.Add("Accept", "application/vnd.twitchtv.v5+json");
+		Http.DefaultRequestHeaders.Add("Authorization", $"Bearer {User.AccessToken}");
+		Http.DefaultRequestHeaders.Add("Client-ID", Configuration["twitch.clientid"]);
+		var response = await Http.GetFromJsonAsync<TwitchUserProfiles>("https://api.twitch.tv/helix/users");
+		var thisProfile = response.data.First();
 
-    User.Updated();
-    Nav.NavigateTo("/");
+		User.PictureUri = new Uri(thisProfile.profile_image_url);
+		User.TwitchId = thisProfile.id;
+		User.DisplayName = thisProfile.display_name;
 
-  }
+		User.Updated();
+		Nav.NavigateTo("/");
+
+	}
 
 }
