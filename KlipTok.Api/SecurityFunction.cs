@@ -35,10 +35,16 @@ namespace KlipTok.Api {
           "&grant_type=authorization_code" +
           $"&redirect_uri={uri}";
       
-      var results = await _Client.PostAsync(targetUrl, new StringContent(""));
+      HttpResponseMessage results = null;
       
       try {
-      results.EnsureSuccessStatusCode();
+        results = await _Client.PostAsync(targetUrl, new StringContent(""));
+      } catch (Exception ex) {
+        return new BadRequestObjectResult(ex);
+      }
+      
+      try {
+        results.EnsureSuccessStatusCode();
       } catch (Exception ex) {
         return new BadRequestObjectResult(ex);
       }
