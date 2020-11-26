@@ -13,8 +13,8 @@ namespace KlipTok.Api {
 
   public class SecurityFunction {
 
-    static string TwitchClientId = System.Environment.GetEnvironmentVariable("twitch.clientid");
-    static string TwitchSecret = System.Environment.GetEnvironmentVariable("twitch.secret");
+    static string TwitchClientId = System.Environment.GetEnvironmentVariable("twitchclientid");
+    static string TwitchSecret = System.Environment.GetEnvironmentVariable("twitchsecret");
     private readonly HttpClient _Client;
 
     public SecurityFunction(IHttpClientFactory clientFactory)
@@ -36,7 +36,12 @@ namespace KlipTok.Api {
           $"&redirect_uri={uri}";
       
       var results = await _Client.PostAsync(targetUrl, new StringContent(""));
+      
+      try {
       results.EnsureSuccessStatusCode();
+      } catch (Exception ex) {
+        return new BadRequestObjectResult(ex);
+      }
 
       return new OkObjectResult(await results.Content.ReadAsStringAsync());
 
