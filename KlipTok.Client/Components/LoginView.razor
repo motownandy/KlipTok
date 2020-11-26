@@ -23,7 +23,7 @@
 		var thisUri = new Uri(Nav.BaseUri);
 		var port = thisUri.IsDefaultPort ? "" : (":" + thisUri.Port);
 		var redirect = new Uri (new Uri(thisUri.Scheme + "://" + thisUri.Host + port), "/authorize");
-		var scopes = "user:read:email user:edit:follows";
+		var scopes = "";
 		@* var claims = "{\"id_token\":{\"email\":null},\"userinfo\":{\"picture\":null}}"; *@
 		var url = $"https://id.twitch.tv/oauth2/authorize?client_id={clientId}&redirect_uri={redirect}&response_type=code&scope={scopes}";
 

@@ -47,6 +47,7 @@
 		var redirect = new Uri (new Uri(thisUri.Scheme + "://" + thisUri.Host + port), "/authorize");
 
     var code = QueryHelpers.ParseQuery(thisUri.Query).GetValueOrDefault("code");
+    if (string.IsNullOrEmpty(code)) return;
 
     var results = await Http.GetFromJsonAsync<TwitchToken>($"api/auth?code={code}&redirect_uri={redirect}");
 
@@ -58,6 +59,8 @@
 
   public async Task GetUserInfo()
   {
+
+    if (User.AccessToken == string.Empty) return;
 
 //    Http.DefaultRequestHeaders.Add("Accept", "application/vnd.twitchtv.v5+json");
     Http.DefaultRequestHeaders.Add("Authorization", $"Bearer {User.AccessToken}");
