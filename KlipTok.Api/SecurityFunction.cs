@@ -25,14 +25,19 @@ namespace KlipTok.Api {
     [FunctionName("auth")]
     public async Task<IActionResult> Authenticate([HttpTrigger(AuthorizationLevel.Anonymous, "get")]HttpRequest request, ILogger log) {
 
-      var code = request.Query["code"];
-      var uri = request.Query["redirect_uri"];
+      string code, uri;
+
+      try {
+        code = request.Query["code"];
+        uri = request.Query["redirect_uri"];
+      } catch (Exception ex) {
+        return new BadRequestObjectResult(ex);
+      }
+
 
       return new OkObjectResult(new {
         Code = code,
-        Uri = uri,
-        ClientId = TwitchClientId,
-        Secret = TwitchSecret
+        Uri = uri
       });
 
       var targetUrl = $"https://id.twitch.tv/oauth2/token" +
