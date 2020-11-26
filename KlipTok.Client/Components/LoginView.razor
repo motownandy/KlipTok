@@ -1,0 +1,34 @@
+@inject TwitchUser User
+@inject IConfiguration Config
+@inject NavigationManager Nav
+
+@if (User.AccessToken == string.Empty) {
+	<a href="@GetLoginUrl()">Login with Twitch</a>
+} else {
+	<img src="@User.PictureUri.ToString()" height="40" alt="@User.DisplayName" />
+}
+
+@code {
+
+	protected override async Task OnInitializedAsync() {
+
+		User.OnChange += () => this.StateHasChanged();
+		await base.OnInitializedAsync();
+
+	}
+
+	private string GetLoginUrl() {
+
+		var clientId = Config["twitch.clientid"];
+		var thisUri = new Uri(Nav.BaseUri);
+		var port = thisUri.IsDefaultPort ? "" : (":" + thisUri.Port);
+		var redirect = new Uri (new Uri(thisUri.Scheme + "://" + thisUri.Host + port), "/authorize");
+		var scopes = "user:read:email user:edit:follows";
+		@* var claims = "{\"id_token\":{\"email\":null},\"userinfo\":{\"picture\":null}}"; *@
+		var url = $"https://id.twitch.tv/oauth2/authorize?client_id={clientId}&redirect_uri={redirect}&response_type=code&scope={scopes}";
+
+		return url;
+
+	}
+
+}
