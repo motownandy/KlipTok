@@ -90,9 +90,11 @@ namespace KlipTok.Api
 				ILogger log)
 		{
 
-			var userId = long.Parse("0" + req.Query?["twitchuserid"].ToString());
+			long.TryParse("0" + req.Query?["twitchuserid"].ToString(), out var userId);
+			int.TryParse("0" + req.Query["startindex"].ToString(), out var startIndex);
+			int.TryParse("0" + req.Query["numclips"].ToString(), out var numClips);
 
-			var results = await _Repo.GetClips(userId);
+			var results = await _Repo.GetClips(userId, startIndex, numClips);
 
 			results = (await GetClipViews(results)).OrderByDescending(r => r.Likes / (double)r.Views);
 

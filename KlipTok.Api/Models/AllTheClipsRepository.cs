@@ -52,12 +52,12 @@ namespace KlipTok.Api.Models
 
 		}
 
-		public async Task<IEnumerable<Clip>> GetClips(long twitchId)
+		public async Task<IEnumerable<Clip>> GetClips(long twitchId, int startIndex, int numClips)
 		{
 
 			// TODO: Read from our algorithm
 
-			var clips = (await _ClipRepository.GetAll())
+			var clips = (await _ClipRepository.GetAll(startIndex, numClips))
 				.Select(t => t.ToClip()).ToArray();
 
 			var keys = clips.Select(c => c.TwitchClipSlug).ToArray();

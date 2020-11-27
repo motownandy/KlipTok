@@ -11,7 +11,7 @@ namespace KlipTok.Api.Models
 
 		public TwitchClipRepository(IConfiguration configuration) : base(configuration) { }
 
-		public async Task<IEnumerable<TwitchClip>> GetAll() {
+		public async Task<IEnumerable<TwitchClip>> GetAll(int startIndex, int numClips) {
 
 			var table = GetCloudTable(TableName);
 
@@ -40,7 +40,7 @@ namespace KlipTok.Api.Models
 
 			}
 
-			return outList;
+			return outList.Skip(startIndex).Take(numClips);
 
 
 		}

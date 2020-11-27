@@ -3,15 +3,6 @@
 @inject TwitchUser user  
 @inject IJSRuntime js
 
-@if (!Clips.Any() || width == 0)
-{
-	<p>Loading...</p>
-}
-else
-{
-
-	var first = true;
-
 <div class="grid-container">
 	<div id="followSidebar">
 		<h3>Following:</h3>
@@ -24,37 +15,51 @@ else
 		</ul>
 	</div>
 	<main>
-		@foreach (var clip in Clips)
-		{
 
-			<CascadingValue Name="Width" Value="@width">
-				<Clip ClipData="@clip" Autoplay="@first"></Clip>
-			</CascadingValue>
+		<Virtualize Context="clip" Items="@Clips"> 
+			@*ItemsProvider="@GetClips" OverscanCount="2" ItemSize="400"> *@
+			
+			<ItemContent>
+				<CascadingValue Name="Width" Value="@width">
+					<Clip ClipData="@clip"></Clip>
+				</CascadingValue>
+			</ItemContent>
 
-			first = false;
+			<Placeholder>
+				<p>
+					Loading&hellip;
+				</p>
+			</Placeholder>
+		</Virtualize>
 
-		}
 	</main>
 </div>
 
-}
-
-
 @code {
 
-	IEnumerable<Models.Clip> Clips = new Models.Clip[] { };
-
 	int width = 0;
+	// int totalClips = 50;
+
+	IEnumerable<Models.Clip> Clips = new Models.Clip[] { };
 
 	protected override async Task OnInitializedAsync()
 	{
 
 		width = await js.InvokeAsync<int>("window.Page.getWidth");
 
-		Clips = await Http.GetFromJsonAsync<IEnumerable<Models.Clip>>($"/api/GetClips?twitchuserid={user.TwitchId}");
+		// Clips = await Http.GetFromJsonAsync<IEnumerable<Models.Clip>>($"/api/GetClips?twitchuserid={user.TwitchId}&startIndex=0&numclips=20");
 
 		await base.OnInitializedAsync();
 
 	}
+
+	//private async ValueTask<ItemsProviderResult<Models.Clip>> GetClips(
+	//	ItemsProviderRequest request)
+	//{
+	//	var numClips = Math.Min(request.Count, totalClips - request.StartIndex);
+	//	var clips = await Http.GetFromJsonAsync<IEnumerable<Models.Clip>>($"/api/GetClips?twitchuserid={user.TwitchId}&startIndex={request.StartIndex}&numclips={numClips}");
+
+	//	return new ItemsProviderResult<Models.Clip>(clips, totalClips);
+	//}
 
 }
