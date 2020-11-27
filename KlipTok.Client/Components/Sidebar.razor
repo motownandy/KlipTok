@@ -1,0 +1,55 @@
+﻿@inject IConfiguration Configuration    
+@inject TwitchUser User
+@inject HttpClient Http
+
+<div id="followSidebar">
+	<h3>Following:</h3>
+	<ul>
+		@if (Following.Any())
+		{
+		
+			foreach (var item in Following)
+			{
+				<li @onclick="() => FilterChannels(item.twitchId)" class="@(selectedTwitchId == item.twitchId ? "selectedFollow" : "")"><a href="#">@item.displayName</a></li>
+			}
+
+		}
+	</ul>
+</div>
+
+@code {
+
+	[Parameter] public EventCallback<string> OnChannelFilter { get; set; }
+
+	[Parameter] public IEnumerable<(string twitchId, string displayName, int newClips)> Following { get; set; } = new (string twitchId, string displayName, int newClips)[] { };
+
+	private string selectedTwitchId = string.Empty;
+
+	protected override async Task OnInitializedAsync() {
+
+		if (string.IsNullOrEmpty(User.AccessToken)) return;
+
+		Http.DefaultRequestHeaders.Clear();
+		Http.DefaultRequestHeaders.Add("Client-Id", Configuration["twitch.clientid"]);
+		Http.DefaultRequestHeaders.Add("Authorization", $"Bearer {User.AccessToken}");
+
+		Console.WriteLine("Loading followers");
+
+		var follows = await Http.GetFromJsonAsync<Models.FollowsOutput>($"https://api.twitch.tv/helix/users/follows?from_id={User.TwitchId}");
+
+		Following = follows.data.Select(d => (d.to_id, d.to_name, 0)).ToArray();
+
+	}
+
+	void FilterChannels(string twitchUserId) {
+
+		selectedTwitchId = twitchUserId;
+		OnChannelFilter.InvokeAsync(twitchUserId);
+
+	}
+
+	public void ClearFilter() {
+		selectedTwitchId = string.Empty;
+	}
+
+}

@@ -52,13 +52,20 @@ namespace KlipTok.Api.Models
 
 		}
 
-		public async Task<IEnumerable<Clip>> GetClips(long twitchId)
+		public async Task<IEnumerable<Clip>> GetClips(long twitchId, string filterUserId)
 		{
 
 			// TODO: Read from our algorithm
 
-			var clips = (await _ClipRepository.GetAll())
-				.Select(t => t.ToClip()).ToArray();
+			Clip[] clips = new Clip[] { };
+			if (string.IsNullOrEmpty(filterUserId))
+			{
+				clips = (await _ClipRepository.GetAll())
+					.Select(t => t.ToClip()).ToArray();
+			} else {
+				clips = (await _ClipRepository.GetAllForPartition(filterUserId))
+					.Select(t => t.ToClip()).ToArray();
+			}
 
 			var keys = clips.Select(c => c.TwitchClipSlug).ToArray();
 			var commentCounts = await _CommentsRepository.GetCountOfComments(keys);

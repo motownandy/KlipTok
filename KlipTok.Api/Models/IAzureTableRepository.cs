@@ -8,7 +8,7 @@ namespace KlipTok.Api.Models
 
 		Task AddClip(Clip clip);
 
-		Task<IEnumerable<Clip>> GetClips(long twitchId);
+		Task<IEnumerable<Clip>> GetClips(long twitchId, string filterUserId);
 
 		Task AddLike(string clipSlug, string userId, bool addLike);
 

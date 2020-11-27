@@ -195,3 +195,9 @@ app {
 .likeButton {
 	cursor: pointer;
 }
+
+.selectedFollow, .selectedFollow > * {
+	font-weight: bold;
+	background-color: rgb(89, 0, 219);
+	color: white;
+}

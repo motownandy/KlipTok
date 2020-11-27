@@ -91,8 +91,9 @@ namespace KlipTok.Api
 		{
 
 			var userId = long.Parse("0" + req.Query?["twitchuserid"].ToString());
+			var filterUserId = req.Query["filter"];
 
-			var results = await _Repo.GetClips(userId);
+			var results = await _Repo.GetClips(userId, filterUserId);
 
 			results = (await GetClipViews(results)).OrderByDescending(r => r.Likes / (double)r.Views);
 
@@ -102,6 +103,8 @@ namespace KlipTok.Api
 
 		private async Task<IEnumerable<Clip>> GetClipViews(IEnumerable<Clip> results)
 		{
+
+			if (!results.Any()) return results;
 
 			var ids = results.Select(r => $"&id={r.TwitchClipSlug}").ToArray();
 			var part = string.Join(' ', ids).Replace(" ", "").Substring(1);

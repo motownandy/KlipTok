@@ -3,46 +3,40 @@
 @inject TwitchUser user  
 @inject IJSRuntime js
 
-@if (!Clips.Any() || width == 0)
+@if (Clips == null)
 {
 	<p>Loading...</p>
 }
 else
 {
-
-	var first = true;
-
 <div class="grid-container">
-	<div id="followSidebar">
-		<h3>Following:</h3>
-		<ul>
-			<li>pharewings</li>
-			<li>FierceKittenz</li>
-			<li>VisualStudio</li>
-			<li>roberttables</li>
-			<li>MrDemonWolf</li>
-		</ul>
-	</div>
+	<Sidebar @ref="theSidebar" OnChannelFilter="FilterChannels" />
 	<main>
-		@foreach (var clip in Clips)
+		@if (Clips.Any())
 		{
+			foreach (var clip in Clips)
+			{
 
-			<CascadingValue Name="Width" Value="@width">
-				<Clip ClipData="@clip" Autoplay="@first"></Clip>
-			</CascadingValue>
+				<CascadingValue Name="Width" Value="@width">
+					<Clip ClipData="@clip"></Clip>
+				</CascadingValue>
 
-			first = false;
-
+			}
+		}
+		else
+		{
+			<p>No clips available</p>
+			<p><a href="#" @onclick="LoadAllClips">Reload all clips</a></p>
 		}
 	</main>
 </div>
-
 }
-
 
 @code {
 
-	IEnumerable<Models.Clip> Clips = new Models.Clip[] { };
+	protected Sidebar theSidebar;
+
+	IEnumerable<Models.Clip> Clips = null;
 
 	int width = 0;
 
@@ -51,9 +45,20 @@ else
 
 		width = await js.InvokeAsync<int>("window.Page.getWidth");
 
-		Clips = await Http.GetFromJsonAsync<IEnumerable<Models.Clip>>($"/api/GetClips?twitchuserid={user.TwitchId}");
+		await LoadAllClips();
 
 		await base.OnInitializedAsync();
+
+	}
+
+	protected async Task LoadAllClips() {
+		theSidebar?.ClearFilter();
+		Clips = await Http.GetFromJsonAsync<IEnumerable<Models.Clip>>($"/api/GetClips?twitchuserid={user.TwitchId}");
+	}
+
+	protected async Task FilterChannels(string twitchUserId) {
+
+		Clips = await Http.GetFromJsonAsync<IEnumerable<Models.Clip>>($"/api/GetClips?twitchuserid={user.TwitchId}&filter={twitchUserId}");
 
 	}
 
