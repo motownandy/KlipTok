@@ -46,7 +46,7 @@ namespace KlipTok.Api
 
 			var results = await _Repo.GetClips(userId);
 
-			results = (await GetClipViews(results)).OrderByDescending(r => r.Views);
+			results = (await GetClipViews(results)).OrderByDescending(r => r.Likes / (double)r.Views);
 
 			return new OkObjectResult(results);
 
