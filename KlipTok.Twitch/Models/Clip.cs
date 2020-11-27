@@ -13,11 +13,18 @@ namespace KlipTok.Twitch.Models
 
 		public string ChannelName { get; set; }
 
+		public long TwitchUserId { get; set; }
+
 		public int Views { get; set; }
 
 		public string Title { get; set; }
 
-		public int Likes { get; set; }
+		public long Likes { get; set; }
+
+		public bool IsLikedByMe { get; set; }
+
+		public int CommentCount { get; set; }
+
 
 	}
 }
