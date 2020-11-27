@@ -24,12 +24,11 @@
 					<Clip ClipData="@clip"></Clip>
 				</CascadingValue>
 			</ItemContent>
-
+			
 			<Placeholder>
-				<p>
-					Loading&hellip;
-				</p>
+				Loading...
 			</Placeholder>
+
 		</Virtualize>
 
 	</main>
@@ -40,14 +39,14 @@
 	int width = 0;
 	// int totalClips = 50;
 
-	IEnumerable<Models.Clip> Clips = new Models.Clip[] { };
+	protected Models.Clip[] Clips = new Models.Clip[] { };
 
 	protected override async Task OnInitializedAsync()
 	{
 
 		width = await js.InvokeAsync<int>("window.Page.getWidth");
 
-		// Clips = await Http.GetFromJsonAsync<IEnumerable<Models.Clip>>($"/api/GetClips?twitchuserid={user.TwitchId}&startIndex=0&numclips=20");
+		Clips = (await Http.GetFromJsonAsync<IEnumerable<Models.Clip>>($"/api/GetClips?twitchuserid={user.TwitchId}&startIndex=0&numclips=20")).ToArray();
 
 		await base.OnInitializedAsync();
 
