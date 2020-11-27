@@ -16,8 +16,7 @@
 	</div>
 	<main>
 
-		<Virtualize Context="clip" Items="@Clips"> 
-			@*ItemsProvider="@GetClips" OverscanCount="2" ItemSize="400"> *@
+		<Virtualize Context="clip" ItemsProvider="@GetClips" >
 			
 			<ItemContent>
 				<CascadingValue Name="Width" Value="@width">
@@ -37,7 +36,7 @@
 @code {
 
 	int width = 0;
-	// int totalClips = 50;
+	int totalClips = 10;
 
 	protected Models.Clip[] Clips = new Models.Clip[] { };
 
@@ -52,13 +51,13 @@
 
 	}
 
-	//private async ValueTask<ItemsProviderResult<Models.Clip>> GetClips(
-	//	ItemsProviderRequest request)
-	//{
-	//	var numClips = Math.Min(request.Count, totalClips - request.StartIndex);
-	//	var clips = await Http.GetFromJsonAsync<IEnumerable<Models.Clip>>($"/api/GetClips?twitchuserid={user.TwitchId}&startIndex={request.StartIndex}&numclips={numClips}");
+	private async ValueTask<ItemsProviderResult<Models.Clip>> GetClips(
+		ItemsProviderRequest request)
+	{
+		var numClips = Math.Min(request.Count, totalClips - request.StartIndex);
+		var clips = await Http.GetFromJsonAsync<Models.Clip[]>($"/api/GetClips?twitchuserid={user.TwitchId}&startIndex={request.StartIndex}&numclips={numClips}");
 
-	//	return new ItemsProviderResult<Models.Clip>(clips, totalClips);
-	//}
+		return new ItemsProviderResult<Models.Clip>(clips, totalClips);
+	}
 
 }
