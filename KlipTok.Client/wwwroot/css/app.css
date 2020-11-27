@@ -152,6 +152,15 @@ app {
 				margin-bottom: 10px;
 			}
 
+		.grid-container {
+			height: 100%;
+			display: grid;
+			grid-template-columns: 300px auto;
+			grid-template-rows: 1fr;
+			gap: 0px 0px;
+			grid-template-areas: ". .";
+		}
+
 		main {
 			display: flex;
 			flex-direction: column;
@@ -159,6 +168,8 @@ app {
 			justify-content: flex-start;
 			align-items: center;
 			align-content: flex-start;
+			height: calc(100vh - 7rem);
+			overflow-y: scroll;
 		}
 
 			main > * {
