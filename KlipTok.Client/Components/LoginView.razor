@@ -20,10 +20,16 @@ else
 		if (string.IsNullOrEmpty(User.AccessToken)) {
 			var user = await localStorage.GetItemAsync<TwitchUser>("twitchuser");
 			if (user != null) {
-				User = user;
+				User.AccessToken = user.AccessToken;
+				User.DisplayName = user.DisplayName;
+				User.ExpiresAt = user.ExpiresAt;
+				User.PictureUri = user.PictureUri;
+				User.RefreshToken = user.RefreshToken;
+				User.TwitchId = user.TwitchId;
 			}
 		}
 
+		Console.WriteLine(User.TwitchId);
 
 		User.OnChange += () => this.StateHasChanged();
 		await base.OnInitializedAsync();

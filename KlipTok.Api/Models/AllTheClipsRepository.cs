@@ -45,11 +45,8 @@ namespace KlipTok.Api.Models
 					TwitchId = userId
 				});
 			} else {
-				await _LikesRepository.Remove(new ClipLikes
-				{
-					ClipSlug = clipSlug,
-					TwitchId = userId
-				});
+				var theLike = await _LikesRepository.Get(clipSlug, userId);
+				await _LikesRepository.Remove(theLike);
 			}
 
 
@@ -61,21 +58,22 @@ namespace KlipTok.Api.Models
 			// TODO: Read from our algorithm
 
 			var clips = (await _ClipRepository.GetAll())
-				.Select(t => t.ToClip());
+				.Select(t => t.ToClip()).ToArray();
 
 			var keys = clips.Select(c => c.TwitchId).ToArray();
 			var commentCounts = await _CommentsRepository.GetCountOfComments(keys);
-			var clipLikes = await _LikesRepository.GetCountOfLikes(keys);
+			var clipLikes = await _LikesRepository.GetCountOfLikes(keys, twitchId);
 
 			foreach (var clip in clips)
 			{
 
 				clip.CommentCount = commentCounts[clip.TwitchId];
-				clip.Likes = clipLikes[clip.TwitchId];
+				clip.Likes = clipLikes[clip.TwitchId].count;
+				clip.IsLikedByMe = clipLikes[clip.TwitchId].isPresent;
 
 			}
 
-			return clips.ToArray();
+			return clips;
 
 		}
 	}

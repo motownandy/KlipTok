@@ -14,11 +14,11 @@
 		<span title="Likes" aria-label="Likes">
 			@if (ClipData.IsLikedByMe)
 			{
-				<i @onclick="async () => await LikeClip(ClipData.TwitchId, false)" class="fas fa-heart"></i>
+				<i @onclick="async () => await LikeClip(ClipData.TwitchId, false)" class="fas fa-heart likeButton"></i>
 			}
 			else
 			{
-				<i @onclick="async () => await LikeClip(ClipData.TwitchId, true)" class="far fa-heart"></i>
+				<i @onclick="async () => await LikeClip(ClipData.TwitchId, true)" class="far fa-heart likeButton"></i>
 			}
 			@ClipData.Likes
 		</span>

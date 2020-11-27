@@ -72,14 +72,15 @@ namespace KlipTok.Api.Models
 
 		public ClipLikesRepository(IConfiguration configuration) : base(configuration) { }
 
-		public async Task<Dictionary<string, long>> GetCountOfLikes(IEnumerable<string> clipIds)
+		public async Task<Dictionary<string, (long count, bool isPresent)>> GetCountOfLikes(IEnumerable<string> clipIds, long twitchId)
 		{
 
-			var outDictionary = new Dictionary<string, long>();
+			var outDictionary = new Dictionary<string, (long, bool)>();
 			foreach (var item in clipIds)
 			{
 				var count = (await base.GetAllForPartition(item)).Count();
-				outDictionary.Add(item, count);
+				var exists = ((await base.Get(item, twitchId.ToString()))	!= null);
+				outDictionary.Add(item, (count,exists));
 			}
 
 			return outDictionary;

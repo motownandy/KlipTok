@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject HttpClient Http
+@inject TwitchUser user  
 @inject IJSRuntime js
 Let's look at some clips
 
@@ -53,7 +54,7 @@ else
 
 		width = await js.InvokeAsync<int>("window.Page.getWidth");
 
-		Clips = await Http.GetFromJsonAsync<IEnumerable<Models.Clip>>("/api/GetClips");
+		Clips = await Http.GetFromJsonAsync<IEnumerable<Models.Clip>>($"/api/GetClips?twitchuserid={user.TwitchId}");
 
 		await base.OnInitializedAsync();
 
