@@ -11,11 +11,16 @@
 				class="player">
 </iframe>
 } else {
-
-	<img src="@ThumbnailUrl" alt="@Title" 
-		width="@PlayerWidth"
-		height="@PlayerHeight"
-	title="@Title" @onclick="StartPlaying" />
+	
+<div style="position: relative">
+	<img src="@ThumbnailUrl" alt="@Title"
+			 width="@PlayerWidth"
+			 height="@PlayerHeight"
+			 title="@Title" />
+	<div @onclick="StartPlaying" class="overlayPlay" style="position: absolute; top:0; left:0; width: @($"{PlayerWidth}px"); height: @($"{PlayerHeight}px");z-index:10;font-size: 4em; color: #FFF; text-align: center;">
+		<i class="fas fa-play" style="cursor: pointer; line-height: @($"{PlayerHeight}px")"></i>
+	</div>
+</div>
 
 }
 @code {
