@@ -1,5 +1,7 @@
 ﻿@inject HttpClient Http
 @inject TwitchUser User
+@inject NavigationManager Nav
+@inject IConfiguration Configuration  
 
 <section class="clipBlock">
 
@@ -38,6 +40,10 @@
 	public async Task LikeClip(string twitchClipSlug, bool addLike)
 	{
 
+		if (string.IsNullOrEmpty(User.AccessToken)) {
+			Nav.NavigateTo(Formatters.TwitchUrl.GetLoginUrl(Configuration, Nav).ToString());
+		}
+
 		var dict = new Dictionary<string, string>() {
 			{"clipslug", twitchClipSlug },
 			{"userid", User.TwitchId },
@@ -51,6 +57,6 @@
 		ClipData.Likes = ClipData.Likes + (addLike ? 1 : -1);
 		StateHasChanged();
 
-}
+	}
 
 }
