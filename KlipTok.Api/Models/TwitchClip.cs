@@ -27,7 +27,7 @@ namespace KlipTok.Api.Models
 			{
 				ChannelName = this.ChannelName,
 				Title = this.Title,
-				TwitchId = this.ClipSlug
+				TwitchClipSlug = this.ClipSlug
 			};
 		}
 
@@ -37,7 +37,7 @@ namespace KlipTok.Api.Models
 			{
 				ChannelId = clip.TwitchUserId.ToString(),
 				ChannelName = clip.ChannelName,
-				ClipSlug = clip.TwitchId,
+				ClipSlug = clip.TwitchClipSlug,
 				Title = clip.Title
 			};
 

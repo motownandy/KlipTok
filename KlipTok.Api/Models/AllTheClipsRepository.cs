@@ -60,16 +60,16 @@ namespace KlipTok.Api.Models
 			var clips = (await _ClipRepository.GetAll())
 				.Select(t => t.ToClip()).ToArray();
 
-			var keys = clips.Select(c => c.TwitchId).ToArray();
+			var keys = clips.Select(c => c.TwitchClipSlug).ToArray();
 			var commentCounts = await _CommentsRepository.GetCountOfComments(keys);
 			var clipLikes = await _LikesRepository.GetCountOfLikes(keys, twitchId);
 
 			foreach (var clip in clips)
 			{
 
-				clip.CommentCount = commentCounts[clip.TwitchId];
-				clip.Likes = clipLikes[clip.TwitchId].count;
-				clip.IsLikedByMe = clipLikes[clip.TwitchId].isPresent;
+				clip.CommentCount = commentCounts[clip.TwitchClipSlug];
+				clip.Likes = clipLikes[clip.TwitchClipSlug].count;
+				clip.IsLikedByMe = clipLikes[clip.TwitchClipSlug].isPresent;
 
 			}
 

@@ -8,7 +8,7 @@
 	<div><a class="twitchChannelName" href="https://twitch.tv/@ClipData.ChannelName" target="_blank">@ClipData.ChannelName</a> @ClipData.Title</div>
 
 	<div>
-		<TwitchPlayer ClipId="@ClipData.TwitchId" Autoplay="@Autoplay" />
+		<TwitchPlayer ClipSlug="@ClipData.TwitchClipSlug" ThumbnailUrl="@ClipData.ThumbnailUrl" Title="@ClipData.Title" />
 		@*<div class="player" style="height:405px;width:720px;display:block;background-color:#333;color:#FFF;">Video Slug</div>*@
 	</div>
 
@@ -16,11 +16,11 @@
 		<span title="Likes" aria-label="Likes">
 			@if (ClipData.IsLikedByMe)
 			{
-				<i @onclick="async () => await LikeClip(ClipData.TwitchId, false)" class="fas fa-heart likeButton"></i>
+				<i @onclick="async () => await LikeClip(ClipData.TwitchClipSlug, false)" class="fas fa-heart likeButton"></i>
 			}
 			else
 			{
-				<i @onclick="async () => await LikeClip(ClipData.TwitchId, true)" class="far fa-heart likeButton"></i>
+				<i @onclick="async () => await LikeClip(ClipData.TwitchClipSlug, true)" class="far fa-heart likeButton"></i>
 			}
 			@ClipData.Likes
 		</span>

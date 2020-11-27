@@ -1,5 +1,8 @@
 ﻿@inject NavigationManager nav
-<iframe src="https://clips.twitch.tv/embed?clip=@(ClipId)&parent=@(new Uri(nav.Uri).Host)&autoplay=@(Autoplay.ToString().ToLowerInvariant())"
+
+@if (IsPlaying)
+{
+<iframe src="https://clips.twitch.tv/embed?clip=@(ClipSlug)&parent=@(new Uri(nav.Uri).Host)&autoplay=true"
 				width="@PlayerWidth"
 				height="@PlayerHeight"
 				frameborder="0"
@@ -7,6 +10,14 @@
 				allowfullscreen="true"
 				class="player">
 </iframe>
+} else {
+
+	<img src="@ThumbnailUrl" alt="@Title" 
+		width="@PlayerWidth"
+		height="@PlayerHeight"
+	title="@Title" @onclick="StartPlaying" />
+
+}
 @code {
 
 	/*
@@ -14,14 +25,22 @@
 					width="720"
 	*/
 
-	[Parameter] public string ClipId { get; set; }
+	[Parameter] public string ClipSlug { get; set; }
 
-	[Parameter] public bool Autoplay { get; set; } = false;
+	[Parameter] public string Title { get; set; }
+
+	[Parameter] public string ThumbnailUrl { get; set; }
 
 	[CascadingParameter(Name = "Width")] public int Width { get; set; }
+
+	protected bool IsPlaying { get; set; } = false;
 
 	protected string PlayerWidth {  get { return Width > 900 ? "720" : "100%"; } }
 
 	protected string PlayerHeight { get { return Width > 900 ? "405" : ""; } }
+
+	void StartPlaying() {
+		IsPlaying = true;
+	}
 
 }

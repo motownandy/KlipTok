@@ -9,7 +9,7 @@ namespace KlipTok.Twitch.Models
 	public class Clip
 	{
 
-		public string TwitchId { get; set; }
+		public string TwitchClipSlug { get; set; }
 
 		public string ChannelName { get; set; }
 
@@ -24,6 +24,8 @@ namespace KlipTok.Twitch.Models
 		public bool IsLikedByMe { get; set; }
 
 		public int CommentCount { get; set; }
+
+		public string ThumbnailUrl { get; set; }
 
 
 	}
