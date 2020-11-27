@@ -27,6 +27,13 @@ namespace KlipTok.Api
 					Likes=10
 				},
 				new Clip() {
+					TwitchId="WiseAntsyVampireFloof",
+					ChannelName="csharpfritz",
+					Views=100,
+					Title="Intro to KlipTok",
+					Likes=666
+				},
+				new Clip() {
 					TwitchId="PoisedVastLettuceHeyGirl",
 					ChannelName="PhareEwings",
 					Views=11300,

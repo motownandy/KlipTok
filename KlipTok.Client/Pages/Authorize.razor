@@ -4,25 +4,28 @@
 @inject NavigationManager Nav
 @inject HttpClient Http
 @inject TwitchUser User
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
 
 <dl>
-  <dt>Access Token:</dt>
-  <dd>@AccessToken</dd>
+	<dt>Access Token:</dt>
+	<dd>@AccessToken</dd>
 </dl>
 
 <b>User Data:</b>
 
-@if (User != null) {
-<dl>
-  <dt>User Access Token LENGTH</dt>
-  <dd>@User.AccessToken.Length</dd>
-  <dt>Id:</dt>
-  <dd>@User.TwitchId</dd>
-  <dt>Display Name:</dt>
-  <dd>@User.DisplayName</dd>
-  <dt>Picture</dt>
-  <dd><img src="@User.PictureUri?.ToString()" /></dd>
-</dl>
+@if (User != null)
+{
+	<dl>
+		<dt>User Access Token LENGTH</dt>
+		<dd>@User.AccessToken.Length</dd>
+		<dt>Id:</dt>
+		<dd>@User.TwitchId</dd>
+		<dt>Display Name:</dt>
+		<dd>@User.DisplayName</dd>
+		<dt>Picture</dt>
+		<dd><img src="@User.PictureUri?.ToString()" /></dd>
+	</dl>
 }
 
 @code {
@@ -42,11 +45,12 @@
 
 	}
 
-	public async Task GetTokens() {
+	public async Task GetTokens()
+	{
 
 		var thisUri = new Uri(Nav.Uri);
 		var port = thisUri.IsDefaultPort ? "" : (":" + thisUri.Port);
-		var redirect = new Uri (new Uri(thisUri.Scheme + "://" + thisUri.Host + port), "/authorize");
+		var redirect = new Uri(new Uri(thisUri.Scheme + "://" + thisUri.Host + port), "/authorize");
 
 		var code = QueryHelpers.ParseQuery(thisUri.Query).GetValueOrDefault("code");
 		if (string.IsNullOrEmpty(code)) return;
@@ -82,6 +86,7 @@
 		User.TwitchId = thisProfile.id;
 		User.DisplayName = thisProfile.display_name;
 
+		await localStorage.SetItemAsync<TwitchUser>("twitchuser", User);
 		User.Updated();
 		Nav.NavigateTo("/");
 
