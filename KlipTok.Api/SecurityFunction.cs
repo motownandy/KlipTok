@@ -1,12 +1,15 @@
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
+using KlipTok.Twitch;
 using KlipTok.Twitch.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace KlipTok.Api
@@ -18,6 +21,9 @@ namespace KlipTok.Api
 		static string TwitchClientId = System.Environment.GetEnvironmentVariable("twitchclientid");
 		static string TwitchSecret = System.Environment.GetEnvironmentVariable("twitchsecret");
 		private readonly HttpClient _Client;
+
+		internal static TwitchToken AppAccessToken = null;
+
 
 		public SecurityFunction(IHttpClientFactory clientFactory)
 		{
@@ -89,6 +95,23 @@ namespace KlipTok.Api
 			}
 
 			return new OkObjectResult(outResults);
+
+		}
+
+		public static async Task<TwitchToken> GetAppAccessToken(HttpClient client) {
+
+			if (AppAccessToken != null) return AppAccessToken;
+
+			//client.DefaultRequestHeaders.Add("Client-Id", TwitchClientId);
+			var response = await client.PostAsync("https://id.twitch.tv/oauth2/token" +
+					$"?client_id={TwitchClientId}" +
+					$"&client_secret={TwitchSecret}" +
+					"&grant_type=client_credentials" +
+					"&scope=", new StringContent(""));
+
+			response.EnsureSuccessStatusCode();
+			AppAccessToken = JsonSerializer.Deserialize<TwitchToken>(await response.Content.ReadAsStringAsync());
+			return AppAccessToken;
 
 		}
 
