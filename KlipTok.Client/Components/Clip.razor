@@ -1,14 +1,27 @@
-﻿<section class="clipBlock">
+﻿@inject HttpClient Http
+@inject TwitchUser User
+
+<section class="clipBlock">
 
 	<div><a class="twitchChannelName" href="https://twitch.tv/@ClipData.ChannelName" target="_blank">@ClipData.ChannelName</a> @ClipData.Title</div>
 
 	<div>
-		 <TwitchPlayer ClipId="@ClipData.TwitchId" Autoplay="@Autoplay" /> 
+		<TwitchPlayer ClipId="@ClipData.TwitchId" Autoplay="@Autoplay" />
 		@*<div class="player" style="height:405px;width:720px;display:block;background-color:#333;color:#FFF;">Video Slug</div>*@
 	</div>
 
 	<div class="clipStatusBar">
-		<span title="Likes" aria-label="Likes"><i class="fas fa-heart"></i> @ClipData.Likes</span>
+		<span title="Likes" aria-label="Likes">
+			@if (ClipData.IsLikedByMe)
+			{
+				<i @onclick="async () => await LikeClip(ClipData.TwitchId, false)" class="fas fa-heart"></i>
+			}
+			else
+			{
+				<i @onclick="async () => await LikeClip(ClipData.TwitchId, true)" class="far fa-heart"></i>
+			}
+			@ClipData.Likes
+		</span>
 		<span title="Comments"><i class="far fa-comment-dots"></i> @ClipData.CommentCount</span>
 		<span title="Clip Views"><i class="fab fa-twitch"></i> @ClipData.Views.ToShortString()</span>
 		<span title="Share this clip"><i class="fas fa-share-square"></i></span>
@@ -21,5 +34,23 @@
 	[Parameter] public Models.Clip ClipData { get; set; }
 
 	[Parameter] public bool Autoplay { get; set; } = false;
+
+	public async Task LikeClip(string twitchClipSlug, bool addLike)
+	{
+
+		var dict = new Dictionary<string, string>() {
+			{"clipslug", twitchClipSlug },
+			{"userid", User.TwitchId },
+			{"addlike", addLike.ToString() }
+		};
+
+		var content = new FormUrlEncodedContent(dict);
+		await Http.PostAsync("/api/LikeClip", content);
+
+		ClipData.IsLikedByMe = !ClipData.IsLikedByMe;
+		ClipData.Likes = ClipData.Likes + (addLike ? 1 : -1);
+		StateHasChanged();
+
+}
 
 }

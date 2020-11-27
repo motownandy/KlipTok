@@ -10,7 +10,7 @@ namespace KlipTok.Api.Models
 
 		Task<IEnumerable<Clip>> GetClips(long twitchId);
 
-		Task AddLike();
+		Task AddLike(string clipSlug, string userId, bool addLike);
 
 		Task AddComment(long twitchId, string twitchDisplayName, string parentCommentId);
 

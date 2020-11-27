@@ -35,9 +35,24 @@ namespace KlipTok.Api.Models
 			throw new NotImplementedException();
 		}
 
-		public Task AddLike()
+		public async Task AddLike(string clipSlug, string userId, bool addLike)
 		{
-			throw new NotImplementedException();
+			
+			if (addLike) {
+				await _LikesRepository.AddOrUpdate(new ClipLikes
+				{
+					ClipSlug = clipSlug,
+					TwitchId = userId
+				});
+			} else {
+				await _LikesRepository.Remove(new ClipLikes
+				{
+					ClipSlug = clipSlug,
+					TwitchId = userId
+				});
+			}
+
+
 		}
 
 		public async Task<IEnumerable<Clip>> GetClips(long twitchId)
